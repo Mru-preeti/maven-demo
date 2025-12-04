@@ -6,6 +6,7 @@ pipeline {
     }
 
     stages {
+
         stage('Checkout') {
             steps {
                 checkout scm
@@ -14,25 +15,19 @@ pipeline {
 
         stage('Compile') {
             steps {
-                dir('maven-demo') {
-                    sh 'mvn clean compile'
-                }
+                sh 'mvn clean compile'
             }
         }
 
         stage('Build') {
             steps {
-                dir('maven-demo') {
-                    sh 'mvn package -DskipTests'
-                }
+                sh 'mvn package -DskipTests'
             }
         }
 
         stage('Test') {
             steps {
-                dir('maven-demo') {
-                    sh 'mvn test'
-                }
+                sh 'mvn test'
             }
         }
     }
@@ -40,8 +35,8 @@ pipeline {
     post {
         success {
             echo 'Build successful 🎉'
-            archiveArtifacts artifacts: 'maven-demo/target/*.jar', fingerprint: true
-            junit 'maven-demo/target/surefire-reports/*.xml'
+            archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+            junit 'target/surefire-reports/*.xml'
         }
         failure {
             echo 'Build failed ❌'
